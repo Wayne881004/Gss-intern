@@ -1,0 +1,25 @@
+﻿@model Library.Models.LibrarySearch
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>圖書維護</h2>
+
+@using (Html.BeginForm("Index", "Libray", FormMethod.Post, new { id = "Search" }))
+{
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BookName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.BookName, new { @class = "form-control" })
+            </div>
+        </div>
+
+        
+    </div>
+
+
+}
+
