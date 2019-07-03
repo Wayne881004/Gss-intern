@@ -25,7 +25,24 @@ namespace Library.Controllers
             ViewBag.BookUserData = this.bookService.GetUserTable("");
             ViewBag.BookStatusData = this.bookService.GetStatusTable("");
             ViewBag.SearchResult = this.bookService.GetBookByCondtioin(arg);
-            return View("Index");
+            return View("");
         }
+
+        [HttpGet()]
+        public ActionResult InsertBook()
+        {
+            ViewBag.BookClassData = this.bookService.GetClassTable("");
+            ViewBag.InsertResult = false;
+            return View("InsertBook");
+        }
+
+        [HttpPost()]
+        public ActionResult InsertBook(Models.Library arg)
+        {
+            ViewBag.BookClassData = this.bookService.GetClassTable("");
+            ViewBag.InsertResult =  bookService.CheckInsertBook(arg);
+            return View("InsertBook");
+        }
+
     }
 }

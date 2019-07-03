@@ -133,7 +133,7 @@ namespace Library.Models
 		                            ISNULL(MM.USER_ENAME, '') AS BookUser,
 		                            BD.BOOK_STATUS AS BookStatusId,
 		                            BCO.CODE_NAME AS BookStatus,
-		                            FORMAT(BD.BOOK_BOUGHT_DATE, 'yyyy/MM/dd') AS BuyDate
+		                            FORMAT(BD.BOOK_BOUGHT_DATE, 'yyyy/MM/dd') AS BookBuydate
                             FROM BOOK_DATA AS BD
                             INNER JOIN BOOK_CLASS BCL ON BD.BOOK_CLASS_ID = BCL.BOOK_CLASS_ID
                             INNER JOIN BOOK_CODE AS BCO ON BD.BOOK_STATUS = BCO.CODE_ID AND BCO.CODE_TYPE = 'BOOK_STATUS'
@@ -173,11 +173,41 @@ namespace Library.Models
                     BookUser = row["BookUser"].ToString(),
                     BookStatusId = row["BookStatusId"].ToString(),
                     BookStatus = row["BookStatus"].ToString(),
-                    BuyDate = row["BuyDate"].ToString()
+                    BookBuydate = row["BookBuydate"].ToString()
                 });
             }
             return result;
         }
+
+        public bool CheckInsertBook(Models.Library arg)
+        {
+            if (arg.BookName == null || arg.BookAuthor == null || arg.BookPublisher == null || arg.BookIntroduction == null || arg.BookBuydate == null || arg.BookClassId == null)
+            {
+                return false;
+            }
+
+            DataTable dt = new DataTable();
+            string sql = @"INSERT INTO BOOK_DATA (BOOK_NAME, BOOK_AUTHOR, BOOK_PUBLISHER, BOOK_NOTE, BOOK_BOUGHT_DATE, BOOK_CLASS_ID, BOOK_STATUS)
+		                         VALUES (@BookName, @BookAuthor, @BookPublisher, @BookIntroduction, CONVERT(DATETIME, @BookBuydate), @BookClassId, 'A')";
+
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@BookName", arg.BookName == null ? string.Empty : arg.BookName));
+                cmd.Parameters.Add(new SqlParameter("@BookAuthor", arg.BookAuthor == null ? string.Empty : arg.BookAuthor));
+                cmd.Parameters.Add(new SqlParameter("@BookPublisher", arg.BookPublisher == null ? string.Empty : arg.BookPublisher));
+                cmd.Parameters.Add(new SqlParameter("@BookIntroduction", arg.BookIntroduction == null ? string.Empty : arg.BookIntroduction));
+                cmd.Parameters.Add(new SqlParameter("@BookBuydate", arg.BookBuydate == null ? string.Empty : arg.BookBuydate));
+                cmd.Parameters.Add(new SqlParameter("@BookClassId", arg.BookClassId == null ? string.Empty : arg.BookClassId));
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dt);
+                conn.Close();
+            }
+
+            return true;
+        }
+
     }
 
 }

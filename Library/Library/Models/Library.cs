@@ -13,6 +13,7 @@ namespace Library.Models
         /// 書名
         /// </summary>
         [DisplayName("書名")]
+        [Required(ErrorMessage = "此欄位必填")]
         public string  BookName { get; set; }
         /// <summary>
         /// 書名id
@@ -28,14 +29,14 @@ namespace Library.Models
         /// 圖書類別Id
         /// </summary>
         [DisplayName("圖書類別Id")]
+        [Required(ErrorMessage = "此欄位必填")]
         public string BookClassId { get; set; }
-
-
 
         /// <summary>
         /// 借閱人
         /// </summary>
         [DisplayName("借閱人")]
+        [Required(ErrorMessage = "此欄位必填")]
         public string BookUser { get; set; }
         /// <summary>
         /// 借閱人Id
@@ -47,6 +48,7 @@ namespace Library.Models
         /// 借閱狀態
         /// </summary>
         [DisplayName("借閱狀態")]
+
         public string BookStatus { get; set; }
         /// <summary>
         /// 借閱狀態Id
@@ -57,8 +59,29 @@ namespace Library.Models
         /// <summary>
         /// 購書日期
         /// </summary>
-        [DisplayName("購書日期")]
-        public string BuyDate { get; set; }
+        [DisplayName("購書日期(yyyy/MM/dd) 不可亂填!!")]
+        [Required(ErrorMessage = "此欄位必填")]
+        public string BookBuydate { get; set; }
 
+        /// <summary>
+        /// 出版商
+        /// </summary>
+        [DisplayName("出版商")]
+        [Required(ErrorMessage = "此欄位必填")]
+        public string BookPublisher { get; set; }
+
+        /// <summary>
+        /// 作者
+        /// </summary>
+        [DisplayName("作者")]
+        [Required(ErrorMessage = "此欄位必填")]
+        public string BookAuthor { get; set; }
+
+        /// <summary>
+        /// 內容簡介
+        /// </summary>
+        [DisplayName("內容簡介")]
+        [Required(ErrorMessage = "此欄位必填")]
+        public string BookIntroduction { get; set; }
     }
 }

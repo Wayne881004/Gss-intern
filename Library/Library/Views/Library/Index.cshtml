@@ -44,8 +44,8 @@
             </div>
             <div class="col-md-10">
                 <input type="submit" value="查詢" />
-                @Html.ActionLink("add", "InsertEmployee")
-                @Html.ActionLink("清除", "Index")
+                @Html.ActionLink("新增書本", "InsertBook")
+                @Html.ActionLink("清除表格", "Index")
             </div>
         </div>
         @if (ViewBag.SearchResult != null)
@@ -67,7 +67,7 @@
                         <tr id='@item.BookId'>
                             <td>@item.BookClass</td>
                             <td>@item.BookName</td>
-                            <td>@item.BuyDate</td>
+                            <td>@item.BookBuydate</td>
                             <td>@item.BookStatus</td>
                             <td>@item.BookUser</td>
 
