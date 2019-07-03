@@ -59,7 +59,7 @@ namespace Library.Models
         /// <summary>
         /// 購書日期
         /// </summary>
-        [DisplayName("購書日期(yyyy/MM/dd) 不可亂填!!")]
+        [DisplayName("購書日期(yyyy_MM_dd) 不可亂填!!")]
         [Required(ErrorMessage = "此欄位必填")]
         public string BookBuydate { get; set; }
 
