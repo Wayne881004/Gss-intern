@@ -6,7 +6,7 @@
 
 <h2>圖書維護</h2>
 
-@using (Html.BeginForm("Index", "Libray", FormMethod.Post, new { id = "Search" }))
+@using (Html.BeginForm("Index", "Library", FormMethod.Post, new { id = "Search" }))
 {
     <div class="form-horizontal">
 
@@ -17,9 +17,65 @@
             </div>
         </div>
 
-        
+        <div class="form-group">
+            @Html.LabelFor(model => model.BookClassId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BookClassId, (List<SelectListItem>)ViewBag.BookClassData, "請選擇", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BookUserId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BookUserId, (List<SelectListItem>)ViewBag.BookUserData, "請選擇", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BookStatusId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.BookStatusId, (List<SelectListItem>)ViewBag.BookStatusData, "請選擇", new { @class = "form-control" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-10">
+                <input type="submit" value="查詢" />
+                @Html.ActionLink("add", "InsertEmployee")
+                @Html.ActionLink("清除", "Index")
+            </div>
+        </div>
+        @if (ViewBag.SearchResult != null)
+        {
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr id>
+                        <th>圖書類別</th>
+                        <th>書名</th>
+                        <th>購書日期</th>
+                        <th>借閱狀態</th>
+                        <th>借閱人</th>
+                        <td colspan="3"></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in (List<Library.Models.Library>)ViewBag.SearchResult)
+                    {
+                        <tr id='@item.BookId'>
+                            <td>@item.BookClass</td>
+                            <td>@item.BookName</td>
+                            <td>@item.BuyDate</td>
+                            <td>@item.BookStatus</td>
+                            <td>@item.BookUser</td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     </div>
-
-
 }
 

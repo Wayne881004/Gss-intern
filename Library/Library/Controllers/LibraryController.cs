@@ -8,10 +8,24 @@ namespace Library.Controllers
 {
     public class LibraryController : Controller
     {
-        // GET: Library
+        Models.BookService bookService = new Models.BookService();
+
         public ActionResult Index()
         {
-            return View();
+            ViewBag.BookClassData = this.bookService.GetClassTable("");
+            ViewBag.BookUserData = this.bookService.GetUserTable("");
+            ViewBag.BookStatusData = this.bookService.GetStatusTable("");
+            return View("");
+        }
+
+        [HttpPost()]
+        public ActionResult Index(Models.LibrarySearch arg)
+        {
+            ViewBag.BookClassData = this.bookService.GetClassTable("");
+            ViewBag.BookUserData = this.bookService.GetUserTable("");
+            ViewBag.BookStatusData = this.bookService.GetStatusTable("");
+            ViewBag.SearchResult = this.bookService.GetBookByCondtioin(arg);
+            return View("Index");
         }
     }
 }
