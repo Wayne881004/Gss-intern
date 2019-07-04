@@ -44,5 +44,28 @@ namespace Library.Controllers
             return View("InsertBook");
         }
 
+        [HttpPost()]
+        public JsonResult DeleteBook(string BookID)
+        {
+            try
+            {
+                bookService.DeleteBookId(BookID);
+                return this.Json(true);
+            }
+
+            catch (Exception ex)
+            {
+                return this.Json(false);
+            }
+        }
+
+        [HttpGet()]
+        public ActionResult Data(int BookId)
+        {
+            ViewBag.DataResult = this.bookService.GetDataByCondtioin(BookId);
+            return View("Data");
+        }
+
+
     }
 }

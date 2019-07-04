@@ -101,6 +101,6 @@ C:\Users\NT2018\Desktop\MVC\Library\Library\bin\zh-Hant\System.Web.Webpages.Depl
 C:\Users\NT2018\Desktop\MVC\Library\Library\bin\zh-Hant\System.Web.Webpages.Razor.resources.dll
 C:\Users\NT2018\Desktop\MVC\Library\Library\bin\zh-Hant\System.Web.Helpers.resources.dll
 C:\Users\NT2018\Desktop\MVC\Library\Library\bin\zh-Hant\System.Web.Mvc.resources.dll
-C:\Users\NT2018\Desktop\MVC\Library\Library\obj\Debug\Library.csprojResolveAssemblyReference.cache
 C:\Users\NT2018\Desktop\MVC\Library\Library\obj\Debug\Library.dll
 C:\Users\NT2018\Desktop\MVC\Library\Library\obj\Debug\Library.pdb
+C:\Users\NT2018\Desktop\MVC\Library\Library\obj\Debug\Library.csprojResolveAssemblyReference.cache

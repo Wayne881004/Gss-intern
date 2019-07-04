@@ -108,6 +108,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BookService.cs" />
+    <Compile Include="Models\Data.cs" />
     <Compile Include="Models\LibrarySearch.cs" />
     <Compile Include="Models\Library.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,6 +124,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Library\InsertBook.cshtml" />
+    <Content Include="Views\Library\Data.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

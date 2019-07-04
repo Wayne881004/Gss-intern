@@ -37,10 +37,10 @@ namespace Library.Models
                 sqlAdapter.Fill(dt);
                 conn.Close();
             }
-            return this.MapClassData(dt , arg);
+            return this.MapClass_Data(dt , arg);
         }
 
-        private List<SelectListItem> MapClassData(DataTable dt, string arg)
+        private List<SelectListItem> MapClass_Data(DataTable dt, string arg)
         {
             List<SelectListItem> result = new List<SelectListItem>();
             foreach (DataRow row in dt.Rows)
@@ -70,10 +70,10 @@ namespace Library.Models
                 sqlAdapter.Fill(dt);
                 conn.Close();
             }
-            return this.MapUserData(dt,arg);
+            return this.MapUser_Data(dt,arg);
         }
 
-        private List<SelectListItem> MapUserData(DataTable dt, string arg)
+        private List<SelectListItem> MapUser_Data(DataTable dt, string arg)
         {
             List<SelectListItem> result = new List<SelectListItem>();
             foreach (DataRow row in dt.Rows)
@@ -104,10 +104,10 @@ namespace Library.Models
                 sqlAdapter.Fill(dt);
                 conn.Close();
             }
-            return this.MapStatusData(dt,arg);
+            return this.MapStatus_Data(dt,arg);
         }
 
-        private List<SelectListItem> MapStatusData(DataTable dt,string arg)
+        private List<SelectListItem> MapStatus_Data(DataTable dt,string arg)
         {
             List<SelectListItem> result = new List<SelectListItem>();
             foreach (DataRow row in dt.Rows)
@@ -156,9 +156,9 @@ namespace Library.Models
                 sqlAdapter.Fill(dt);
                 conn.Close();
             }
-            return this.MapBookDataToList(dt);
+            return this.MapBook_DataToList(dt);
         }
-        private List<Models.Library> MapBookDataToList(DataTable bookData)
+        private List<Models.Library> MapBook_DataToList(DataTable bookData)
         {
             List<Models.Library> result = new List<Library>();
             foreach (DataRow row in bookData.Rows)
@@ -207,7 +207,68 @@ namespace Library.Models
 
             return true;
         }
+        /// <summary>
+        /// 刪除書本
+        /// </summary>
+        public void DeleteBookId(string BookID)
+        {
+            try
+            {
+                string sql = @"DELETE BOOK_DATA WHERE BOOK_ID = @BookID";
+                using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.Add(new SqlParameter("@BookID", BookID));
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        // Book Data
+        public List<Models.Data> GetDataByCondtioin(int arg)
+        {
+            DataTable dt = new DataTable();
+            string sql = @"SELECT FORMAT(BLR.LEND_DATE, 'yyyy/MM/dd') AS BookLendDate,
+		                            BLR.KEEPER_ID AS BookUserId,
+		                            MM.USER_ENAME AS BookUserEName,
+		                            MM.USER_CNAME as BookUserCName,
+		                            BLR.BOOK_ID
+                            FROM BOOK_LEND_RECORD AS BLR
+                            INNER JOIN MEMBER_M AS MM ON BLR.KEEPER_ID = MM.[USER_ID]
+                            WHERE BLR.BOOK_ID = @Id
+                            ORDER BY BookLendDate DESC";
+            using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add(new SqlParameter("@Id", arg));
+                SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
+                sqlAdapter.Fill(dt);
+                conn.Close();
+            }
+            return this.MapData_Data(dt);
+        }
 
+        private List<Models.Data> MapData_Data(DataTable dt)
+        {
+            List<Models.Data> result = new List<Data>();
+            foreach (DataRow row in dt.Rows)
+            {
+                result.Add(new Data()
+                {
+                    BookLendDate = row["BookLendDate"].ToString(),
+                    BookUserId = row["BookUserId"].ToString(),
+                    BookUserEName = row["BookUserEName"].ToString(),
+                    BookUserCName = row["BookUserCName"].ToString()
+                });
+            }
+            return result;
+        }
     }
 
 }
