@@ -1,0 +1,219 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>圖書維護</h2>
+
+
+<table>
+    <tr class="form-group">
+        <td class="control-label col-md-2" style="font-weight:bold">書名</td>
+        <td class="col-md-10">
+            <input class="form-control" id="BookName" type="text" />
+        </td>
+    </tr>
+    <tr class="form-group">
+        <td class="control-label col-md-2" style="font-weight:bold">圖書類別</td>
+        <td class="col-md-10">
+            <select class="form-control" id="BookClass" type="text" > </select>
+        </td>
+    </tr>
+    <tr class="form-group">
+        <td class="control-label col-md-2" style="font-weight:bold">借閱人</td>
+        <td class="col-md-10">
+            <select class="form-control" id="BookUser" type="text" > </select>
+        </td>
+    </tr>
+    <tr class="form-group">
+        <td class="control-label col-md-2" style="font-weight:bold">借閱狀態</td>
+        <td class="col-md-10">
+            <select class="form-control" id="BookStatus" type="text" > </select>
+        </td>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>
+            <button class="btn btn-primary" id="BtnSearch" type="button">查詢</button>
+            <button class="btn btn-default" id="BtnClean" type="button" onclick="location.href = '/Library/Index';">清除</button>
+            <button class="btn btn-default" type="button" onclick="location.href = '/Library/InsertBook';">新增</button>
+        </td>
+    </tr>
+</table>
+
+<div id ="BookGrid"></div>
+<div id="RecordWindow" style="display: none;">
+    <div id="RecordGrid"></div>
+</div>
+<script>
+    $(function () {
+        $("#BookClass").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataSource: {
+                transport: {
+                    read: {
+                        method: "post",
+                        url: "/Library/GetClass",
+                        dataType: "json"
+                    }
+                }
+            }
+        }),
+        $("#BookUser").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataSource: {
+                transport: {
+                    read: {
+                        method: "post",
+                        url: "/Library/GetUser",
+                        dataType: "json"
+                    }
+                }
+            }
+        }),
+        $("#BookStatus").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataSource: {
+                transport: {
+                    read: {
+                        method: "post",
+                        url: "/Library/GetStatus",
+                        dataType: "json"
+                    }
+                }
+            }
+        }),
+
+        $("#RecordWindow").kendoWindow({
+            width: "700px",
+            height: "600px",
+            title: "借閱紀錄",
+            visible: false,
+            actions: [
+                "Pin",
+                "Minimize",
+                "Maximize",
+                "Close"
+            ]
+        })
+    })
+
+    $("#BtnSearch").click(function () {
+        var Data = {
+            "BookName": $("#BookName").val(),
+            "BookClassId": $("#BookClass").val(),
+            "BookUserId": $("#BookUser").val(),
+            "BookStatusId": $("#BookStatus").val()
+        };
+        console.log(Data);
+        $("#BookGrid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        method: "post",
+                        url: "/Library/GetSearch",
+                        dataType: "json",
+                        data: Data
+                    }
+                },
+                schema: {
+                    model: {
+                        fields: {
+                            BookClassId: { type: "string" },
+                            BookClassName: { type: "string" },
+                            BookId: { type: "string" },
+                            BookName: { type: "string" },
+                            BookUserId: { type: "int" },
+                            BookUser: { type: "string" },
+                            BookStatusId: { type: "string" },
+                            BookStatus: { type: "string" },
+                            BookBuyDate: { type: "string" }
+                        }
+                    }
+                },
+                pageSize: 20,
+            },
+            height: 550,
+            sortable: true,
+            pageable: {
+                input: true,
+                numeric: false
+            },
+            columns: [
+                { field: "BookClass", title: "圖書類別", width: "20%" },
+                { field: "BookName", title: "書名", width: "50%" },
+                { field: "BookBuyDate", title: "購書日期", width: "20%" },
+                { field: "BookStatus", title: "借閱狀態", width: "15%" },
+                { field: "BookUser", title: "借閱人", width: "12%" },
+                { command: { text: "借閱紀錄", click: BookRecord }, title: " ", width: "150px" },
+                { command: { text: "刪除", click: DeleteBook }, title: " ", width: "150px" }
+            ]
+        })
+    })
+
+    function DeleteBook(e) {
+        e.preventDefault();
+        if (confirm("確定要刪除?")) {
+            var Book = this.dataItem($(e.currentTarget).closest("tr"));
+            if (Book.BookStatusId == "B" || Book.BookStatusId == "C") {
+                alert("借出中的書無法刪除!");
+            }
+            else {
+                dataSource: {
+                    $.ajax({
+                        method: "post",
+                        url: "/Library/DeleteBook",
+                        dataType: "json",
+                        data: { "BookId": Book.BookId }
+                    })
+                }
+                $("#BookGrid").data('kendoGrid').dataSource.read();
+            }
+        }
+    }
+    function BookRecord(e) {
+        var id = this.dataItem($(e.currentTarget).closest("tr")).BookId;
+        $("#RecordGrid").kendoGrid({
+            dataSource: {
+                transport: {
+                    read: {
+                        method: "post",
+                        url: "/Library/GetRecord",
+                        dataType: "json",
+                        data: { "BookId": id }
+                    }
+                },
+                schema: {
+                    model: {
+                        fields: {
+                            BookLendDate: { type: "string" },
+                            BookUserId: { type: "string" },
+                            BookUserEname: { type: "string" },
+                            BookUserCname: { type: "string" }
+                        }
+                    }
+                },
+                pageSize: 20,
+            },
+            height: 550,
+            sortable: true,
+            pageable: {
+                input: true,
+                numeric: false
+            },
+            columns: [
+                { field: "BookLendDate", title: "借閱日期", width: "20%" },
+                { field: "BookUserId", title: "借閱人編號", width: "20%" },
+                { field: "BookUserEName", title: "英文姓名", width: "20%" },
+                { field: "BookUserCName", title: "中文姓名", width: "20%" }
+
+            ]
+        }),
+        $('#RecordWindow').data("kendoWindow").center().open();
+    }
+
+</script>
